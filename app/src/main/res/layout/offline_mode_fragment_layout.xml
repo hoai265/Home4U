@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/status_container"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/baseListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/connect_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/status_container">
+        <RelativeLayout
+            android:id="@+id/ip_container"
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/ip_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="GATEWAY IP"/>
+            <EditText
+                android:id="@+id/edit_ip"
+                android:padding="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/ip_title"
+                android:singleLine="true"
+                android:background="@null"
+                android:textColor="@color/gray_dark"
+                android:gravity="center"
+                android:text="0.0.0.0"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/port_container"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/ip_container"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/port_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="GATEWAY PORT"/>
+            <EditText
+                android:id="@+id/edit_port"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/port_title"
+                android:singleLine="true"
+                android:background="@null"
+                android:gravity="center"
+                android:textColor="@color/gray_dark"
+                android:padding="4dp"
+                android:text="2500"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_below="@+id/port_container"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/sl_button"
+            android:text="CONNECT"
+            android:textColor="@color/green"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/status_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:id="@+id/progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
