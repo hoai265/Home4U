@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     ConfigFragment mConfigFragmentInstance;
     NotificationFragment mNotificationFragment;
 //    AddIrActionFragement mAddIrActionFragment;
-    OfflineModeFragment mOfflineModeFragmentInstance;
+//    OfflineModeFragment mOfflineModeFragmentInstance;
     Toolbar mToolbar;
 
     @Override
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
     OfflineModeFragment getOfflineModeFragmentInstance()
     {
-        mOfflineModeFragmentInstance = new OfflineModeFragment();
+        OfflineModeFragment mOfflineModeFragmentInstance = new OfflineModeFragment();
         return mOfflineModeFragmentInstance;
     }
 

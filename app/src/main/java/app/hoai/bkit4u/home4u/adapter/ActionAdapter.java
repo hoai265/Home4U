@@ -60,4 +60,10 @@ public class ActionAdapter extends BaseAdapter
         this.mModels = list;
         notifyDataSetChanged();
     }
+
+    public void addItem(DeviceActionModel action)
+    {
+        this.mModels.add(action);
+        notifyDataSetChanged();
+    }
 }

@@ -758,4 +758,20 @@ public class NetworkController
 
         return requestJson.toString();
     }
+
+    public String getOfflineCommandString(String deviceId, String actionId)
+    {
+        JSONObject Json = new JSONObject();
+        try
+        {
+            Json.put("msgID", 96);
+            Json.put("deviceID", deviceId);
+            Json.put("actionID", actionId);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        return Json.toString();
+    }
 }

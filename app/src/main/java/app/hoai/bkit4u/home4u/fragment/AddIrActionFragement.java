@@ -67,7 +67,8 @@ public class AddIrActionFragement extends BaseFragment
             @Override
             public void onClick(View v)
             {
-                if(mUdpSendingThread != null)mUdpSendingThread.sendString(NetworkController.getInstance().getBroadcastString(), "255.255.255.255", 2000);
+                if (mUdpSendingThread != null)
+                    mUdpSendingThread.sendString(NetworkController.getInstance().getBroadcastString(), "255.255.255.255", 2000);
             }
         });
 

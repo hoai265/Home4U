@@ -18,6 +18,7 @@ public class TcpServerThread extends Thread
     ServerSocket mServerSocket;
     List<Client> mUserList = new ArrayList<>();
     OnResponseListener mListener;
+    boolean IsStop = false;
 
     @Override
     public void run()
@@ -27,7 +28,7 @@ public class TcpServerThread extends Thread
         try
         {
             mServerSocket = new ServerSocket(SERVER_PORT);
-            while (true)
+            while (!IsStop)
             {
                 socket = mServerSocket.accept();
                 Log.e("Home4U", "TCP 1 server running!");
@@ -40,12 +41,17 @@ public class TcpServerThread extends Thread
                     {
                         if (mListener != null)
                         {
-                            mListener.OnGetMessage("message", responses[1]);
+                            mListener.OnGetMessage(responses);
                         }
                     }
                 });
 
                 connectThread.start();
+            }
+
+            for (Client client : mUserList)
+            {
+                client.mThread.stopConnection();
             }
 
         } catch (IOException e)
@@ -64,7 +70,11 @@ public class TcpServerThread extends Thread
                 }
             }
         }
+    }
 
+    public void stopServer()
+    {
+        IsStop = true;
     }
 
 
@@ -74,6 +84,7 @@ public class TcpServerThread extends Thread
         Socket socket;
         Client connectClient;
         OnResponseListener mListener;
+        boolean IsStopConnection = false;
 
         ConnectThread(Client client, Socket socket, OnResponseListener listener)
         {
@@ -92,19 +103,24 @@ public class TcpServerThread extends Thread
             try
             {
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                while (true)
+                while (!IsStopConnection)
                 {
-//                    Log.e("Home4U", "TCP 2 server running!");
                     if (dataInputStream.available() > 0)
                     {
-                        String newMsg = dataInputStream.readLine();
-                        Log.e("Home4U", "TCP 2"+newMsg);
-                        if (mListener != null)
+                        String newMsg = dataInputStream.readLine().trim();
+                        if (mListener != null && !newMsg.isEmpty())
                         {
-                            mListener.OnGetMessage("message", newMsg);
+                            if(newMsg.indexOf("actionID") == -1)
+                            {
+                                mListener.OnGetMessage("device", newMsg);
+                            } else
+                            {
+                                mListener.OnGetMessage("action", newMsg);
+                            }
                         }
                     }
                 }
+
 
             } catch (IOException e)
             {
@@ -125,6 +141,11 @@ public class TcpServerThread extends Thread
                 mUserList.remove(connectClient);
             }
 
+        }
+
+        public void stopConnection()
+        {
+            IsStopConnection = true;
         }
     }
 

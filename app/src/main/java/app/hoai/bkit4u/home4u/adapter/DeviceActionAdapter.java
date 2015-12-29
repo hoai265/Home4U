@@ -57,4 +57,10 @@ public class DeviceActionAdapter extends BaseAdapter
         this.mModels = list;
         notifyDataSetChanged();
     }
+
+    public void addItem(DeviceActionModel model)
+    {
+        this.mModels.add(model);
+        notifyDataSetChanged();
+    }
 }

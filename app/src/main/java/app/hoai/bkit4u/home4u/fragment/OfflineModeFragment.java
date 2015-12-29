@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import app.hoai.bkit4u.home4u.R;
-import app.hoai.bkit4u.home4u.adapter.DeviceAdapter;
+import app.hoai.bkit4u.home4u.adapter.DeviceOfflineAdapter;
 import app.hoai.bkit4u.home4u.controller.NetworkController;
+import app.hoai.bkit4u.home4u.model.DeviceActionModel;
+import app.hoai.bkit4u.home4u.model.DeviceOfflineModel;
 import app.hoai.bkit4u.home4u.thread.TcpClientThread;
 import app.hoai.bkit4u.home4u.thread.TcpServerThread;
 import app.hoai.bkit4u.home4u.thread.UdpReceiverThread;
@@ -24,8 +28,7 @@ import app.hoai.bkit4u.home4u.thread.UdpSendingThread;
 public class OfflineModeFragment extends BaseFragment
 {
     ListView mListView;
-    DeviceAdapter mAdapter;
-    ProgressBar mProgress;
+    DeviceOfflineAdapter mAdapter;
     View mProgressContainer;
     TcpClientThread mTcpClient;
     UdpReceiverThread mUdpReceiverThread;
@@ -36,7 +39,9 @@ public class OfflineModeFragment extends BaseFragment
     EditText mEditIp;
     EditText mEditPort;
     Button mBtnConnect;
+    Button mBtnReqquest;
     View mContentView;
+    TCPTask mTcpTask;
 
     String GW_IP;
     int GW_PORT;
@@ -53,17 +58,27 @@ public class OfflineModeFragment extends BaseFragment
         View rootView = inflater.inflate(R.layout.offline_mode_fragment_layout, null);
 
         mListView = (ListView) rootView.findViewById(R.id.baseListView);
-        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_bar);
-        mProgress.setVisibility(View.GONE);
         mProgressContainer = rootView.findViewById(R.id.progress_container);
-
+        mProgressContainer.setVisibility(View.GONE);
         mConnectView = rootView.findViewById(R.id.connect_container);
         mEditIp = (EditText) rootView.findViewById(R.id.edit_ip);
         mEditPort = (EditText) rootView.findViewById(R.id.edit_port);
         mBtnConnect = (Button) rootView.findViewById(R.id.btn_connect);
+        mBtnReqquest = (Button) rootView.findViewById(R.id.btn_request);
         mContentView = rootView.findViewById(R.id.content_container);
 
-        mAdapter = new DeviceAdapter();
+        mAdapter = new DeviceOfflineAdapter();
+        mAdapter.setListener(new DeviceOfflineAdapter.OnSendCommandListener()
+        {
+            @Override
+            public void OnSendCommand(String string)
+            {
+                if (mTcpClient != null) mTcpClient.stopClient();
+
+                mTcpTask = new TCPTask();
+                mTcpTask.execute(string);
+            }
+        });
         mListView.setAdapter(mAdapter);
         mListView.setDividerHeight(0);
 
@@ -72,10 +87,23 @@ public class OfflineModeFragment extends BaseFragment
             @Override
             public void onClick(View v)
             {
+                Log.d("Home4U", "On connect");
                 GW_IP = mEditIp.getText().toString();
                 GW_PORT = Integer.parseInt(mEditPort.getText().toString());
                 mProgressContainer.setVisibility(View.VISIBLE);
-                new TCPTask().execute("");
+
+                mTcpTask = new TCPTask();
+                mTcpTask.execute(NetworkController.getInstance().getRequestDataGateWayString());
+            }
+        });
+
+        mBtnReqquest.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mUdpSendingThread != null)
+                    mUdpSendingThread.sendString(NetworkController.getInstance().getBroadcastString(), "255.255.255.255", 2000);
             }
         });
 
@@ -91,9 +119,36 @@ public class OfflineModeFragment extends BaseFragment
         mTcpServer.setListener(new TcpServerThread.OnResponseListener()
         {
             @Override
-            public void OnGetMessage(String... responses)
+            public void OnGetMessage(final String... responses)
             {
-                Log.d("Home4U-TCP Offline", responses[0] + responses[1]);
+                getActivity().runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Log.d("Home4U-TCP",responses[0]+responses[1]);
+                        try
+                        {
+                            JSONObject json = new JSONObject(responses[1]);
+
+                            if (responses[0].equals("device"))
+                            {
+                                DeviceOfflineModel device = new DeviceOfflineModel(json.getString("deviceID"), json.getString("name"), json.getString("type"));
+                                mAdapter.addDevice(device);
+                            }
+                            else if (responses[0].equals("action"))
+                            {
+                                DeviceActionModel action = DeviceActionModel.createAction(json.getString("actionID"),
+                                        json.getString("deviceID"), json.getString("name"), null);
+                                mAdapter.addAction(action);
+                            }
+
+                        } catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
         mTcpServer.start();
@@ -105,7 +160,7 @@ public class OfflineModeFragment extends BaseFragment
             {
                 final String address = responses[0];
                 final String message = responses[1];
-                Log.d("Home4U-UDP", "Adress " + address);
+                Log.d("Home4U-UDP offline", "Address " + address);
 
                 getActivity().runOnUiThread(new Runnable()
                 {
@@ -137,7 +192,6 @@ public class OfflineModeFragment extends BaseFragment
         @Override
         protected TcpClientThread doInBackground(String... message)
         {
-
             //we create a TCPClient object and
             mTcpClient = new TcpClientThread(new TcpClientThread.OnMessageReceived()
             {
@@ -166,7 +220,7 @@ public class OfflineModeFragment extends BaseFragment
                     publishProgress("error");
                 }
 
-            }, GW_IP, GW_PORT, NetworkController.getInstance().getRequestDataGateWayString());
+            }, GW_IP, GW_PORT, message[0]);
             mTcpClient.run();
 
             return null;
@@ -178,7 +232,6 @@ public class OfflineModeFragment extends BaseFragment
             super.onProgressUpdate(values);
             if (values[0].equals("connected"))
                 onConnected();
-            Log.d("TCP Status!", values[0]);
         }
     }
 
@@ -190,10 +243,12 @@ public class OfflineModeFragment extends BaseFragment
     }
 
     @Override
-    public void onDetach()
+    public void onStop()
     {
-        super.onDetach();
         mUdpSendingThread.kill();
         mUdpReceiverThread.kill();
+        mTcpServer.stopServer();
+        if (mTcpClient != null) mTcpClient.stopClient();
+        super.onStop();
     }
 }
