@@ -9,11 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.widget.TextView;
 import app.hoai.bkit4u.home4u.R;
-import app.hoai.bkit4u.home4u.controller.AppUtils;
 import app.hoai.bkit4u.home4u.controller.PreferencesController;
 import app.hoai.bkit4u.home4u.thread.TcpClientThread;
 
@@ -36,7 +35,6 @@ public class ConfigFragment extends BaseFragment
     View rootView;
     View mConnectView;
     View mConfigView;
-
     String GW_IP;
     int GW_PORT;
 
@@ -136,6 +134,7 @@ public class ConfigFragment extends BaseFragment
     public void onStop()
     {
         super.onStop();
+        mTcpClient.stopClient();
     }
 
     void onConfiguring()
@@ -221,7 +220,7 @@ public class ConfigFragment extends BaseFragment
                     try
                     {
                         JSONObject json = new JSONObject(values[1]);
-                        String type = AppUtils.getDeviceTypeFromString(json.getString("type")).toString();
+                        String type = json.get("type").toString().toUpperCase();
                         mDeviceType.setText(type);
                     } catch (JSONException e)
                     {
