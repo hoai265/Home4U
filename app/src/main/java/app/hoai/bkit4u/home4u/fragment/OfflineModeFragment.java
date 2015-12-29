@@ -131,18 +131,16 @@ public class OfflineModeFragment extends BaseFragment
                         {
                             JSONObject json = new JSONObject(responses[1]);
 
-                            if (responses[0].equals("device"))
+                            if(responses[1].indexOf("actionID") == -1)
                             {
                                 DeviceOfflineModel device = new DeviceOfflineModel(json.getString("deviceID"), json.getString("name"), json.getString("type"));
                                 mAdapter.addDevice(device);
-                            }
-                            else if (responses[0].equals("action"))
+                            } else
                             {
                                 DeviceActionModel action = DeviceActionModel.createAction(json.getString("actionID"),
                                         json.getString("deviceID"), json.getString("name"), null);
                                 mAdapter.addAction(action);
                             }
-
                         } catch (JSONException e)
                         {
                             e.printStackTrace();
@@ -196,7 +194,7 @@ public class OfflineModeFragment extends BaseFragment
             mTcpClient = new TcpClientThread(new TcpClientThread.OnMessageReceived()
             {
                 @Override
-                public void messageReceived(String message)
+                public void onMessage(String message)
                 {
                     //this method calls the onProgressUpdate
                     publishProgress("Received " + message);

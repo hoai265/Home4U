@@ -50,20 +50,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <EditText
-            android:id="@+id/edit_device_name"
-            android:layout_below="@+id/edit_password"
-            android:background="@drawable/bg_edittext"
-            android:textSize="14dp"
-            android:padding="12dp"
-            android:hint="Name"
-            android:layout_marginTop="24dp"
+        <LinearLayout
+            android:id="@+id/device_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/edit_password">
+            <EditText
+                android:id="@+id/edit_device_name"
+                android:background="@drawable/bg_edittext"
+                android:textSize="14dp"
+                android:padding="12dp"
+                android:hint="Name"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/device_type"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:gravity="center"/>
+        </LinearLayout>
         <Button
             android:id="@+id/btn_config"
-            android:layout_below="@+id/edit_device_name"
+            android:layout_below="@+id/device_container"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:background="@drawable/sl_button"
@@ -76,7 +90,8 @@
     <RelativeLayout
         android:id="@+id/connect_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
         <RelativeLayout
             android:id="@+id/ip_container"
             android:layout_width="match_parent"

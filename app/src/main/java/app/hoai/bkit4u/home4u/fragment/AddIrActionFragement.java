@@ -163,7 +163,7 @@ public class AddIrActionFragement extends BaseFragment
             mTcpClient = new TcpClientThread(new TcpClientThread.OnMessageReceived()
             {
                 @Override
-                public void messageReceived(String message)
+                public void onMessage(String message)
                 {
                     //this method calls the onProgressUpdate
                     publishProgress("Received " + message);

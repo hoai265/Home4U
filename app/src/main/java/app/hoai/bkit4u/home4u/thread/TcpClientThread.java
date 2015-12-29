@@ -15,7 +15,6 @@ import java.net.Socket;
  */
 public class TcpClientThread extends Thread
 {
-    private String serverMessage;
     private String requestString;
     private String SERVERIP = "192.168.4.1";
     private int SERVERPORT = 5000;
@@ -77,6 +76,7 @@ public class TcpClientThread extends Thread
 
                 //send the message to the server
                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 if (!requestString.isEmpty())
                 {
@@ -90,6 +90,12 @@ public class TcpClientThread extends Thread
                 while(mRun)
                 {
 //                    Log.e("Home4U-TCP","thread tcp running!");
+                    String data = in.readLine();
+                    if(data != null)
+                    {
+                        if(!data.isEmpty())
+                            mMessageListener.onMessage(data.trim());
+                    }
                 }
             } catch (Exception e)
             {
@@ -114,11 +120,10 @@ public class TcpClientThread extends Thread
 
     }
 
-    //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
     //class at on asynckTask doInBackground
     public interface OnMessageReceived
     {
-        void messageReceived(String message);
+        void onMessage(String message);
 
         void onConnecting();
 

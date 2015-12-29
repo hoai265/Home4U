@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
 import app.hoai.bkit4u.home4u.R;
 import app.hoai.bkit4u.home4u.constant.AppConstant;
 import app.hoai.bkit4u.home4u.listener.OnGetNotifications;

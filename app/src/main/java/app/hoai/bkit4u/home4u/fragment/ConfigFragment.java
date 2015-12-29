@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.widget.TextView;
 import app.hoai.bkit4u.home4u.R;
+import app.hoai.bkit4u.home4u.controller.AppUtils;
 import app.hoai.bkit4u.home4u.controller.PreferencesController;
 import app.hoai.bkit4u.home4u.thread.TcpClientThread;
 
@@ -27,6 +29,7 @@ public class ConfigFragment extends BaseFragment
     EditText editGatewayPort;
     Button btnConfig;
     Button btnConnect;
+    TextView mDeviceType;
     ProgressBar mProgress;
     View mProgressContainer;
     TcpClientThread mTcpClient;
@@ -68,6 +71,7 @@ public class ConfigFragment extends BaseFragment
         mConfigView = rootView.findViewById(R.id.config_container);
         editDeviceName = (EditText) rootView.findViewById(R.id.edit_device_name);
         editWifiName = (EditText) rootView.findViewById(R.id.edit_name);
+        mDeviceType = (TextView) rootView.findViewById(R.id.device_type);
         editWifiPass = (EditText) rootView.findViewById(R.id.edit_password);
         btnConfig = (Button) rootView.findViewById(R.id.btn_config);
 
@@ -116,7 +120,6 @@ public class ConfigFragment extends BaseFragment
 
                 PreferencesController.getInstance().setWifiName(wifiName);
                 PreferencesController.getInstance().setWifiPass(wifiPass);
-                onConfiguringCompleted();
             }
         });
 
@@ -133,8 +136,6 @@ public class ConfigFragment extends BaseFragment
     public void onStop()
     {
         super.onStop();
-        if(mTcpClient != null)
-            mTcpClient.stopClient();
     }
 
     void onConfiguring()
@@ -147,7 +148,7 @@ public class ConfigFragment extends BaseFragment
         mProgressContainer.setVisibility(View.GONE);
         Snackbar.make(getView(), "Config successfully!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        if(mOnFragmentChangeListener != null)
+        if (mOnFragmentChangeListener != null)
         {
             mOnFragmentChangeListener.onHomeRequest();
         }
@@ -169,10 +170,10 @@ public class ConfigFragment extends BaseFragment
             mTcpClient = new TcpClientThread(new TcpClientThread.OnMessageReceived()
             {
                 @Override
-                public void messageReceived(String message)
+                public void onMessage(String message)
                 {
                     //this method calls the onProgressUpdate
-                    publishProgress("message",message);
+                    publishProgress("message", message);
                 }
 
                 @Override
@@ -193,7 +194,7 @@ public class ConfigFragment extends BaseFragment
                     publishProgress("error");
                 }
 
-            }, GW_IP, GW_PORT,"config");
+            }, GW_IP, GW_PORT, "config");
             mTcpClient.run();
 
             return null;
@@ -203,13 +204,30 @@ public class ConfigFragment extends BaseFragment
         protected void onProgressUpdate(String... values)
         {
             super.onProgressUpdate(values);
-            if(values[0].equals("connected"))
-                onConnected();
 
-            else if(values[0].equals("message") && values[1].equals("OK"))
+            if (values[0].equals("connected"))
             {
-                onConfiguringCompleted();
-                Log.d("Home4U-TCP Response",values[1]);
+                onConnected();
+            }
+            else if (values[0].equals("message"))
+            {
+                Log.d("Home4U-TCP Response", values[1]);
+                if (values[1].equals("OK"))
+                {
+                    onConfiguringCompleted();
+                }
+                else
+                {
+                    try
+                    {
+                        JSONObject json = new JSONObject(values[1]);
+                        String type = AppUtils.getDeviceTypeFromString(json.getString("type")).toString();
+                        mDeviceType.setText(type);
+                    } catch (JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }

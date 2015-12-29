@@ -110,13 +110,7 @@ public class TcpServerThread extends Thread
                         String newMsg = dataInputStream.readLine().trim();
                         if (mListener != null && !newMsg.isEmpty())
                         {
-                            if(newMsg.indexOf("actionID") == -1)
-                            {
-                                mListener.OnGetMessage("device", newMsg);
-                            } else
-                            {
-                                mListener.OnGetMessage("action", newMsg);
-                            }
+                            mListener.OnGetMessage("message", newMsg);
                         }
                     }
                 }

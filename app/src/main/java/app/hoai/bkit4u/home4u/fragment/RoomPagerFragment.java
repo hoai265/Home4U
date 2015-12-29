@@ -5,15 +5,12 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-
 import app.hoai.bkit4u.home4u.constant.AppConstant;
 import app.hoai.bkit4u.home4u.controller.FragmentController;
 import app.hoai.bkit4u.home4u.controller.NetworkController;
-import app.hoai.bkit4u.home4u.fragment.dialog.NewEventDialogFragment;
 import app.hoai.bkit4u.home4u.fragment.dialog.NewRoomDialogFragment;
 import app.hoai.bkit4u.home4u.listener.ICallBack;
 import app.hoai.bkit4u.home4u.model.HomeItemModel;
-import app.hoai.bkit4u.home4u.model.type.HomeType;
 
 /**
  * Created by hoaipc on 11/20/15.
@@ -34,7 +31,7 @@ public class RoomPagerFragment extends HomePagerFragment
                 refresh();
             }
         });
-        dialogFragment.show(getFragmentManager(),"create_room");
+        dialogFragment.show(getFragmentManager(), "create_room");
     }
 
     @Override
@@ -53,12 +50,12 @@ public class RoomPagerFragment extends HomePagerFragment
 
         BaseDeviceCollectionFragment fragment = new BaseDeviceCollectionFragment();
 
-        if(mOnFragmentChangeListener!=null)
-        fragment.setOnFragmentChangeListener(mOnFragmentChangeListener);
+        if (mOnFragmentChangeListener != null)
+            fragment.setOnFragmentChangeListener(mOnFragmentChangeListener);
 
         Bundle bundle = new Bundle();
         bundle.putString("firebaseRoot", firebaseRoot);
-        bundle.putString("title",model.getTypeName());
+        bundle.putString("title", model.getTypeName());
         fragment.setArguments(bundle);
 
         fragment.setAddDeviceBuider(new BaseDeviceCollectionFragment.OnAddDeviceBuider()
