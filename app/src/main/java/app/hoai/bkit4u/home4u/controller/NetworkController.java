@@ -705,6 +705,11 @@ public class NetworkController
         }
     }
 
+    public void deleteEventAction(final ResponseListener<String> responseListener, String eventId, String actionId)
+    {
+
+    }
+
     public String getRequestDataGateWayString()
     {
         JSONObject json = new JSONObject();

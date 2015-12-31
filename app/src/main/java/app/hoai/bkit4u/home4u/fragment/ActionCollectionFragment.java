@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import app.hoai.bkit4u.home4u.R;
 import app.hoai.bkit4u.home4u.adapter.ActionAdapter;
 import app.hoai.bkit4u.home4u.controller.NetworkController;
+import app.hoai.bkit4u.home4u.listener.ICallBack;
 import app.hoai.bkit4u.home4u.listener.ResponseListener;
 import app.hoai.bkit4u.home4u.listener.SendActionListener;
 import app.hoai.bkit4u.home4u.model.DeviceActionCollection;
@@ -82,7 +83,15 @@ public class ActionCollectionFragment extends BaseFragment implements View.OnCli
         switch (id)
         {
             case R.id.fab:
-                mOnFragmentChangeListener.onAddActionRequest(getView(),mEventId);
+                mOnFragmentChangeListener.onAddActionRequest(getView(), mEventId, new ICallBack()
+                {
+                    @Override
+                    public void onCallBack()
+                    {
+                        onFetchData();
+                    }
+                });
+
                 break;
             case R.id.fab_excute:
                 if(mActionCollection.getItems().size() > 0)

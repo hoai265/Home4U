@@ -11,7 +11,7 @@ public interface OnFragmentChangeListener
 {
     void onChangeToolbarTitle(String title);
     void onAddDeviceRequest(View v,String objectId);
-    void onAddActionRequest(View v,String objectId);
+    void onAddActionRequest(View v,String objectId, ICallBack OnCallback);
     void onAddIrActionRequest(String id);
     void onHomeRequest();
 }

@@ -94,7 +94,10 @@ public class TcpClientThread extends Thread
                     if(data != null)
                     {
                         if(!data.isEmpty())
+                        {
+                            Log.d("Home4U-TCP Response", data);
                             mMessageListener.onMessage(data.trim());
+                        }
                     }
                 }
             } catch (Exception e)

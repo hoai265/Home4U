@@ -27,6 +27,7 @@ import app.hoai.bkit4u.home4u.fragment.OfflineModeFragment;
 import app.hoai.bkit4u.home4u.fragment.SettingFragment;
 import app.hoai.bkit4u.home4u.fragment.dialog.AddActionDialogFragment;
 import app.hoai.bkit4u.home4u.fragment.dialog.AddDeviceDialogFragment;
+import app.hoai.bkit4u.home4u.listener.ICallBack;
 import app.hoai.bkit4u.home4u.listener.OnFragmentChangeListener;
 import app.hoai.bkit4u.home4u.listener.OnGetNotifications;
 import app.hoai.bkit4u.home4u.listener.ResponseListener;
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentController.changeFragment(getSettingFragment(), "Setting");
                 break;
             case R.id.nav_config:
-                FragmentController.changeFragment(getconfigFragment(), "Config");
+                FragmentController.changeFragment(getConfigFragment(), "Config");
                 break;
             default:
                 break;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity
         return mAnalyticsFragmentInstance;
     }
 
-    ConfigFragment getconfigFragment()
+    ConfigFragment getConfigFragment()
     {
 
         mConfigFragmentInstance = new ConfigFragment();
@@ -275,7 +276,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAddActionRequest(final View v, final String objectId)
+    public void onAddActionRequest(final View v, final String objectId, final ICallBack callBack)
     {
         AddActionDialogFragment dialogFragment = AddActionDialogFragment.getInstance();
         dialogFragment.setOnChooseActionCompleted(new AddActionDialogFragment.OnChooseActionCompletedListener()
@@ -290,6 +291,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         Snackbar.make(v, "Add event action successfully!", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
+                        callBack.onCallBack();
                     }
 
                     @Override

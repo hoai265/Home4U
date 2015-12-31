@@ -30,6 +30,7 @@ public class BaseDeviceCollectionFragment extends BaseFragment implements com.fi
     Firebase rootFireBase;
     FloatingActionButton fab;
     OnAddDeviceBuider mBuider;
+    String firebaseString;
     ProgressBar mProgress;
     View mProgressContainer;
 
@@ -71,15 +72,22 @@ public class BaseDeviceCollectionFragment extends BaseFragment implements com.fi
 
         Bundle bundle = getArguments();
 
-        String fireBaseString = bundle.getString("firebaseRoot");
-        rootFireBase = new Firebase(fireBaseString);
-        rootFireBase.addChildEventListener(this);
+        firebaseString = bundle.getString("firebaseRoot");
 
         String title = bundle.getString("title");
         if (mOnFragmentChangeListener != null)
         {
             mOnFragmentChangeListener.onChangeToolbarTitle(title);
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+        Log.d("Home4U","onActivityCreated");
+        rootFireBase = new Firebase(firebaseString);
+        rootFireBase.addChildEventListener(this);
     }
 
     @Override
@@ -179,7 +187,8 @@ public class BaseDeviceCollectionFragment extends BaseFragment implements com.fi
     @Override
     public void onCancelled(FirebaseError firebaseError)
     {
-
+        onFetchCompleted();
+        Log.d("Home4U - firebase",firebaseError.getMessage());
     }
 
     public void setAddDeviceBuider(OnAddDeviceBuider buider)

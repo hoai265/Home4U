@@ -27,7 +27,7 @@ public class UdpSendingThread extends Thread
     {
         while (runningState)
         {
-            Log.e("Home4U-UDP","thread udp send running!");
+//            Log.e("Home4U-UDP","thread udp send running!");
             if (sendingState)
             {
                 Log.d("Home4U-UDP","send UDP");

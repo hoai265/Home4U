@@ -25,7 +25,6 @@ public class ConfigFragment extends BaseFragment
     EditText editWifiPass;
     EditText editDeviceName;
     EditText editGatewayIp;
-    EditText editGatewayPort;
     Button btnConfig;
     Button btnConnect;
     TextView mDeviceType;
@@ -35,8 +34,9 @@ public class ConfigFragment extends BaseFragment
     View rootView;
     View mConnectView;
     View mConfigView;
+    TCPTask mTCPTask;
     String GW_IP;
-    int GW_PORT;
+    final int GW_PORT = 5000;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -51,7 +51,6 @@ public class ConfigFragment extends BaseFragment
 
         mConnectView = rootView.findViewById(R.id.connect_container);
         editGatewayIp = (EditText) rootView.findViewById(R.id.edit_ip);
-        editGatewayPort = (EditText) rootView.findViewById(R.id.edit_port);
         btnConnect = (Button) rootView.findViewById(R.id.btn_connect);
 
         btnConnect.setOnClickListener(new View.OnClickListener()
@@ -60,9 +59,8 @@ public class ConfigFragment extends BaseFragment
             public void onClick(View v)
             {
                 GW_IP = editGatewayIp.getText().toString();
-                GW_PORT = Integer.parseInt(editGatewayPort.getText().toString());
-
-                new ConnectTask().execute("");
+                mTCPTask = new TCPTask();
+                mTCPTask.execute("");
             }
         });
 
@@ -133,8 +131,9 @@ public class ConfigFragment extends BaseFragment
     @Override
     public void onStop()
     {
+        Log.d("Home4U", "onStop");
         super.onStop();
-        mTcpClient.stopClient();
+        if (mTcpClient != null) mTcpClient.stopClient();
     }
 
     void onConfiguring()
@@ -145,6 +144,7 @@ public class ConfigFragment extends BaseFragment
     void onConfiguringCompleted()
     {
         mProgressContainer.setVisibility(View.GONE);
+        if (mTcpClient != null) mTcpClient.stopClient();
         Snackbar.make(getView(), "Config successfully!", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         if (mOnFragmentChangeListener != null)
@@ -158,7 +158,7 @@ public class ConfigFragment extends BaseFragment
         mProgressContainer.setVisibility(View.GONE);
     }
 
-    public class ConnectTask extends AsyncTask<String, String, TcpClientThread>
+    public class TCPTask extends AsyncTask<String, String, TcpClientThread>
     {
 
         @Override
@@ -210,7 +210,7 @@ public class ConfigFragment extends BaseFragment
             }
             else if (values[0].equals("message"))
             {
-                Log.d("Home4U-TCP Response", values[1]);
+//                Log.d("Home4U-TCP Response", values[1]);
                 if (values[1].equals("OK"))
                 {
                     onConfiguringCompleted();

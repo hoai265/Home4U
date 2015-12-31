@@ -49,10 +49,7 @@ public class TcpServerThread extends Thread
                 connectThread.start();
             }
 
-            for (Client client : mUserList)
-            {
-                client.mThread.stopConnection();
-            }
+            Log.d("Home4U","close server");
 
         } catch (IOException e)
         {
@@ -75,6 +72,11 @@ public class TcpServerThread extends Thread
     public void stopServer()
     {
         IsStop = true;
+
+        for (Client client : mUserList)
+        {
+            client.mThread.stopConnection();
+        }
     }
 
 
@@ -105,6 +107,7 @@ public class TcpServerThread extends Thread
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 while (!IsStopConnection)
                 {
+                    Log.d("Home4U","connection running!");
                     if (dataInputStream.available() > 0)
                     {
                         String newMsg = dataInputStream.readLine().trim();
@@ -115,7 +118,7 @@ public class TcpServerThread extends Thread
                     }
                 }
 
-
+                Log.d("Home4U","close connection");
             } catch (IOException e)
             {
                 e.printStackTrace();

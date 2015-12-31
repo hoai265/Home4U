@@ -11,9 +11,8 @@
 
         <TextView
             android:id="@+id/action_name"
-            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:text="TV on"
-            android:layout_centerVertical="true"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_marginLeft="30dp"
@@ -24,7 +23,8 @@
             android:id="@+id/device_info_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
             android:padding="12dp">
 
             <TextView
@@ -45,6 +45,16 @@
                 android:textSize="12dp"/>
 
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/ic_delete_action"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="6dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_cancel_black_48dp"/>
     </RelativeLayout>
 
     <View

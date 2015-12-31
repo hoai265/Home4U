@@ -29,6 +29,7 @@ public class IRViewHolder extends BaseViewHolder
     TextView deviceStatus;
     static Context context;
     View mAddActionView;
+    View showDeviceAction;
     OnFragmentChangeListener mListener;
 
     @Override
@@ -37,6 +38,7 @@ public class IRViewHolder extends BaseViewHolder
         deviceName = (TextView) rootView.findViewById(R.id.device_name);
         deviceStatus = (TextView) rootView.findViewById(R.id.status);
         showActionView = rootView.findViewById(R.id.ic_show_action);
+        showDeviceAction = rootView.findViewById(R.id.ic_device_action);
         mAddActionView = rootView.findViewById(R.id.add_action);
     }
 

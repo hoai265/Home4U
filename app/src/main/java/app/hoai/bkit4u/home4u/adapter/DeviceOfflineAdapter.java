@@ -2,18 +2,20 @@ package app.hoai.bkit4u.home4u.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.ListPopupWindow;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
+
 import app.hoai.bkit4u.home4u.R;
 import app.hoai.bkit4u.home4u.controller.NetworkController;
 import app.hoai.bkit4u.home4u.model.DeviceActionModel;
 import app.hoai.bkit4u.home4u.model.DeviceOfflineModel;
-import android.util.Log;
 
 /**
  * Created by hoaipc on 12/28/15.
@@ -61,10 +63,10 @@ public class DeviceOfflineAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                Log.d("Home4U","action clicked!");
+                Log.d("Home4U", "action clicked!");
                 if (!model.getActionAdapter().isEmpty())
                 {
-                    Log.d("Home4U","action clicked not null!");
+                    Log.d("Home4U", "action clicked not null!");
                     float scale = context.getResources().getDisplayMetrics().density;
                     final ListPopupWindow listPopupWindow = new ListPopupWindow(context);
                     listPopupWindow.setAdapter(model.getActionAdapter());
@@ -79,7 +81,8 @@ public class DeviceOfflineAdapter extends BaseAdapter
                         public void onItemClick(final AdapterView<?> parent, View view, int position, long id)
                         {
                             listPopupWindow.dismiss();
-                            if(mListener != null) mListener.OnSendCommand(NetworkController.getInstance().getOfflineCommandString(model.getId(),model.getActionAdapter().getItem(position).getId()));
+                            if (mListener != null)
+                                mListener.OnSendCommand(NetworkController.getInstance().getOfflineCommandString(model.getId(), model.getActionAdapter().getItem(position).getId()));
                         }
                     });
                     listPopupWindow.show();
@@ -92,18 +95,16 @@ public class DeviceOfflineAdapter extends BaseAdapter
 
     public void addAction(DeviceActionModel action)
     {
-        for(int i = 0; i<mList.size(); i++)
+        int size = mList.size();
+        for (int i = 0; i < size; i++)
         {
             DeviceOfflineModel device = mList.get(i);
-            Log.d("Home4U", "actionID"+action.getDeviceId()+"/deviceID"+device.getId());
-            if(action.getDeviceId().equals(device.getId()))
+            if (action.getDeviceId().equals(device.getId()))
             {
                 device.getActionAdapter().addItem(action);
                 mList.set(i, device);
-                Log.d("Home4U", "add Action");
+                break;
             }
-
-            break;
         }
         notifyDataSetChanged();
     }
@@ -116,7 +117,7 @@ public class DeviceOfflineAdapter extends BaseAdapter
 
     public interface OnSendCommandListener
     {
-        void OnSendCommand(String string );
+        void OnSendCommand(String string);
     }
 
     public void setListener(OnSendCommandListener mListener)

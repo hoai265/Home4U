@@ -9,12 +9,20 @@
         android:background="@color/white_dark"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/ic_device_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_context_menu"/>
+
         <RelativeLayout
             android:id="@+id/device_info_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:layout_alignParentLeft="true">
+           android:layout_toRightOf="@+id/ic_device_action">
 
             <TextView
                 android:id="@+id/device_name"

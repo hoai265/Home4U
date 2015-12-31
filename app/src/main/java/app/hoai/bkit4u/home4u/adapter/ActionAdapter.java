@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
+
 import app.hoai.bkit4u.home4u.R;
 import app.hoai.bkit4u.home4u.model.BaseDeviceModel;
 import app.hoai.bkit4u.home4u.model.DeviceActionModel;
@@ -17,6 +19,7 @@ import app.hoai.bkit4u.home4u.model.DeviceActionModel;
 public class ActionAdapter extends BaseAdapter
 {
     ArrayList<DeviceActionModel> mModels = new ArrayList<>();
+
     @Override
     public int getCount()
     {
@@ -44,10 +47,20 @@ public class ActionAdapter extends BaseAdapter
         LayoutInflater inflater = (LayoutInflater) parent.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        convertView = inflater.inflate(R.layout.action_item_layout,null);
+        convertView = inflater.inflate(R.layout.action_item_layout, null);
         TextView name = (TextView) convertView.findViewById(R.id.action_name);
-        TextView deviceName = (TextView)convertView.findViewById(R.id.device_name);
+        TextView deviceName = (TextView) convertView.findViewById(R.id.device_name);
         TextView deviceType = (TextView) convertView.findViewById(R.id.device_type);
+        View deleteActionView = convertView.findViewById(R.id.ic_delete_action);
+        deleteActionView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
         deviceName.setText(device.getName());
         deviceType.setText(device.getType().toString());
         name.setText(model.getName());

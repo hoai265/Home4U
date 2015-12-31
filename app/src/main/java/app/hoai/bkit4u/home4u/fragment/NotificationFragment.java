@@ -68,7 +68,8 @@ public class NotificationFragment extends Fragment
                     String deviceName = (String) dataSnapshot.child("name").getValue();
                     String status = (String) dataSnapshot.child("status").getValue();
                     String room = (String) dataSnapshot.child("roomId").getValue();
-                    String noticationContent = deviceName + " in " + room + " is " + status;
+//                    String noticationContent = deviceName + " in " + room + " is " + status;
+                    String noticationContent = deviceName + " is " + status;
 
                     mNotificationText.setText(noticationContent);
 
