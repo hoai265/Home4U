@@ -80,7 +80,6 @@ public class SensorViewHolder extends BaseViewHolder
                     @Override
                     public void onItemClick(final AdapterView<?> parent, View view, int position, long id)
                     {
-                        listPopupWindow.dismiss();
                         NetworkController.getInstance().addCommand(new SendActionListener()
                         {
                             @Override

@@ -45,13 +45,6 @@ public class OfflineModeFragment extends BaseFragment
 
     String GW_IP;
     int GW_PORT;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View getLayout(LayoutInflater inflater)
     {
@@ -73,8 +66,7 @@ public class OfflineModeFragment extends BaseFragment
             @Override
             public void OnSendCommand(String string)
             {
-                if (mTcpClient != null) mTcpClient.stopClient();
-
+                if(mTcpClient != null) mTcpClient.stopClient();
                 mTcpTask = new TCPTask();
                 mTcpTask.execute(string);
             }
@@ -87,7 +79,6 @@ public class OfflineModeFragment extends BaseFragment
             @Override
             public void onClick(View v)
             {
-                Log.d("Home4U", "On connect");
                 GW_IP = mEditIp.getText().toString();
                 GW_PORT = Integer.parseInt(mEditPort.getText().toString());
                 mProgressContainer.setVisibility(View.VISIBLE);

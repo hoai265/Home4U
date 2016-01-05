@@ -2,6 +2,7 @@ package app.hoai.bkit4u.home4u.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,16 +46,8 @@ public class AddIrActionFragement extends BaseFragment
     TCPTask mTCPTask;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        Log.d("Home4U-fragment", "oncreate!");
-    }
-
-    @Override
     public View getLayout(LayoutInflater inflater)
     {
-        Log.d("Home4U-fragment", "on get layout");
         View rootView = inflater.inflate(R.layout.add_ir_action_fragment_layout, null);
 
         mConnectView = rootView.findViewById(R.id.connect_container);
@@ -79,8 +72,7 @@ public class AddIrActionFragement extends BaseFragment
             {
                 GW_IP = gatewayIpText.getText().toString();
                 mProgressContainer.setVisibility(View.VISIBLE);
-                mTCPTask = new TCPTask();
-                mTCPTask.execute("");
+                onConnecting();
             }
         });
 
@@ -94,14 +86,11 @@ public class AddIrActionFragement extends BaseFragment
             {
                 String actionName = editActionName.getText().toString();
                 String requestString = NetworkController.getInstance().getAddActionString(mDeviceID, actionName);
-                if (mTcpClient != null)
-                {
-                    mTcpClient.sendMessage(requestString);
-                }
+                mTCPTask = new TCPTask();
+                mTCPTask.execute(requestString);
 
                 if (mOnFragmentChangeListener != null)
                 {
-                    mTcpClient.stopClient();
                     mOnFragmentChangeListener.onHomeRequest();
                 }
             }
@@ -117,7 +106,6 @@ public class AddIrActionFragement extends BaseFragment
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        Log.d("Home4U-fragment", "on activity create!");
 
         mReceiverThread = new UdpReceiverThread(new UdpReceiverThread.OnResponseListener()
         {
@@ -187,7 +175,7 @@ public class AddIrActionFragement extends BaseFragment
                     publishProgress("error");
                 }
 
-            }, GW_IP, GW_PORT, "");
+            }, GW_IP, GW_PORT, message[0]);
             mTcpClient.run();
 
             return null;
@@ -205,19 +193,22 @@ public class AddIrActionFragement extends BaseFragment
 
     void onConnected()
     {
+    }
+
+    void onConnecting()
+    {
         mProgressContainer.setVisibility(View.GONE);
         mConnectView.setVisibility(View.GONE);
         mConfigView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onDetach()
+    public void onStop()
     {
-        super.onDetach();
-        Log.d("Home4U", "on detach");
+        super.onStop();
+
         mUdpSendingThread.kill();
         mReceiverThread.kill();
-        if (mTcpClient != null) mTcpClient.stopClient();
     }
 
     public void setDeviceID(String mDeviceID)

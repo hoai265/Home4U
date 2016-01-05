@@ -30,7 +30,7 @@ public class UdpSendingThread extends Thread
 //            Log.e("Home4U-UDP","thread udp send running!");
             if (sendingState)
             {
-                Log.d("Home4U-UDP","send UDP");
+                Log.d("Home4U-UDP","send UDP : "+sendingString);
                 sendingBytes = sendingString.getBytes();
                 sendPacket = new DatagramPacket(sendingBytes, sendingString.length(), IPAddress, sendPort);
 

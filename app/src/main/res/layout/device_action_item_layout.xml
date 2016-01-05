@@ -9,7 +9,7 @@
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="200dp"
-            android:background="@color/white"
+            android:background="@drawable/sl_action"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/name"

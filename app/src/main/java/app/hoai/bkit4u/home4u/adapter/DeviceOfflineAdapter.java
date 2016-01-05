@@ -63,10 +63,8 @@ public class DeviceOfflineAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                Log.d("Home4U", "action clicked!");
                 if (!model.getActionAdapter().isEmpty())
                 {
-                    Log.d("Home4U", "action clicked not null!");
                     float scale = context.getResources().getDisplayMetrics().density;
                     final ListPopupWindow listPopupWindow = new ListPopupWindow(context);
                     listPopupWindow.setAdapter(model.getActionAdapter());
@@ -80,7 +78,6 @@ public class DeviceOfflineAdapter extends BaseAdapter
                         @Override
                         public void onItemClick(final AdapterView<?> parent, View view, int position, long id)
                         {
-                            listPopupWindow.dismiss();
                             if (mListener != null)
                                 mListener.OnSendCommand(NetworkController.getInstance().getOfflineCommandString(model.getId(), model.getActionAdapter().getItem(position).getId()));
                         }

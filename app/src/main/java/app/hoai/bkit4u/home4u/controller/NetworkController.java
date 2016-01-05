@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -712,71 +713,48 @@ public class NetworkController
 
     public String getRequestDataGateWayString()
     {
-        JSONObject json = new JSONObject();
-        try
-        {
-            json.put("msgID",72);
-            json.put("deviceID",getMacAddress());
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
+        JsonObject json = new JsonObject();
+        json.addProperty("msgID", 72);
+        json.addProperty("deviceID", getMacAddress());
         return json.toString();
     }
 
     public String getBroadcastString()
     {
-        JSONObject Json = new JSONObject();
-        try
-        {
-            Json.put("msgID", 48);
-            Json.put("deviceID", getMacAddress());
-            Json.put("type", "android");
-            Json.put("name", getMacAddress());
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
 
-        return Json.toString();
+        String mac = getMacAddress();
+        JsonObject json = new JsonObject();
+        json.addProperty("msgID",48);
+        json.addProperty("deviceID",mac);
+        json.addProperty("type","android");
+        json.addProperty("name",mac);
+
+        return json.toString();
     }
 
     public String getAddActionString(String deviceId, String actionName)
     {
-        JSONObject requestJson = new JSONObject();
-        JSONObject targetJson = new JSONObject();
-        try
-        {
-            requestJson.put("msgID",64);
-            requestJson.put("deviceID",getMacAddress());
+        String mac = getMacAddress();
+        JsonObject json = new JsonObject();
 
-            targetJson.put("deviceID",deviceId);
-            targetJson.put("name",actionName);
+        json.addProperty("msgID", 64);
+        json.addProperty("deviceID", mac);
 
-            requestJson.put("target",targetJson);
+        JsonObject targetJson = new JsonObject();
+        targetJson.addProperty("deviceID", deviceId);
+        targetJson.addProperty("name", actionName);
+        json.add("target", targetJson);
 
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        return requestJson.toString();
+        return json.toString();
     }
 
     public String getOfflineCommandString(String deviceId, String actionId)
     {
-        JSONObject Json = new JSONObject();
-        try
-        {
-            Json.put("msgID", 96);
-            Json.put("deviceID", deviceId);
-            Json.put("actionID", actionId);
-        } catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
 
+        JsonObject Json = new JsonObject();
+        Json.addProperty("msgID", 96);
+        Json.addProperty("deviceID", deviceId);
+        Json.addProperty("actionID", actionId);
         return Json.toString();
     }
 }

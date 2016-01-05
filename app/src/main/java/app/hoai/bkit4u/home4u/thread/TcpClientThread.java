@@ -77,19 +77,19 @@ public class TcpClientThread extends Thread
                 //send the message to the server
                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                mMessageListener.onConnected();
 
                 if (!requestString.isEmpty())
                 {
                     out.println(requestString);
                     out.flush();
                     Log.e("Home4U-TCP Send", "Sending data " + requestString);
+                    stopClient();
                 }
 
                 Log.d("Home4U-TCP", "Done.");
-                mMessageListener.onConnected();
                 while(mRun)
                 {
-//                    Log.e("Home4U-TCP","thread tcp running!");
                     String data = in.readLine();
                     if(data != null)
                     {

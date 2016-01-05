@@ -28,10 +28,10 @@ public class TcpServerThread extends Thread
         try
         {
             mServerSocket = new ServerSocket(SERVER_PORT);
-            while (!IsStop)
+            while (!mServerSocket.isClosed())
             {
+                Log.e("Home4U", "TCP Server running!");
                 socket = mServerSocket.accept();
-                Log.e("Home4U", "TCP 1 server running!");
                 Client client = new Client();
                 mUserList.add(client);
                 ConnectThread connectThread = new ConnectThread(client, socket, new OnResponseListener()
@@ -49,7 +49,7 @@ public class TcpServerThread extends Thread
                 connectThread.start();
             }
 
-            Log.d("Home4U","close server");
+            Log.d("Home4U","Close TCP Server!");
 
         } catch (IOException e)
         {
@@ -71,11 +71,14 @@ public class TcpServerThread extends Thread
 
     public void stopServer()
     {
+        Log.d("Home4U","Stop TCP Server!");
         IsStop = true;
-
-        for (Client client : mUserList)
+        try
         {
-            client.mThread.stopConnection();
+            mServerSocket.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -86,7 +89,7 @@ public class TcpServerThread extends Thread
         Socket socket;
         Client connectClient;
         OnResponseListener mListener;
-        boolean IsStopConnection = false;
+        boolean IsClose = false;
 
         ConnectThread(Client client, Socket socket, OnResponseListener listener)
         {
@@ -105,20 +108,20 @@ public class TcpServerThread extends Thread
             try
             {
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                while (!IsStopConnection)
+                while (!IsClose)
                 {
-                    Log.d("Home4U","connection running!");
                     if (dataInputStream.available() > 0)
                     {
                         String newMsg = dataInputStream.readLine().trim();
                         if (mListener != null && !newMsg.isEmpty())
                         {
                             mListener.OnGetMessage("message", newMsg);
+                            closeConnection();
                         }
                     }
                 }
 
-                Log.d("Home4U","close connection");
+                Log.d("Home4U","Close connection");
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -134,15 +137,13 @@ public class TcpServerThread extends Thread
                         e.printStackTrace();
                     }
                 }
-
-                mUserList.remove(connectClient);
             }
 
         }
 
-        public void stopConnection()
+        public void closeConnection()
         {
-            IsStopConnection = true;
+            IsClose = true;
         }
     }
 
