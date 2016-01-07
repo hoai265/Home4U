@@ -10,11 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import app.hoai.bkit4u.home4u.R;
 import app.hoai.bkit4u.home4u.controller.PreferencesController;
-import app.hoai.bkit4u.home4u.thread.TcpClientThread;
+import app.hoai.bkit4u.home4u.thread.TcpClientConfigThread;
 
 /**
  * Created by hoaipc on 11/5/15.
@@ -30,7 +34,7 @@ public class ConfigFragment extends BaseFragment
     TextView mDeviceType;
     ProgressBar mProgress;
     View mProgressContainer;
-    TcpClientThread mTcpClient;
+    TcpClientConfigThread mTcpClient;
     View rootView;
     View mConnectView;
     View mConfigView;
@@ -95,17 +99,10 @@ public class ConfigFragment extends BaseFragment
                 String wifiPass = editWifiPass.getText().toString();
                 String deviceName = editDeviceName.getText().toString();
 
-                JSONObject json = new JSONObject();
-
-                try
-                {
-                    json.put("wifi_name", wifiName);
-                    json.put("wifi_pass", wifiPass);
-                    json.put("device_name", deviceName);
-                } catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
+                JsonObject json = new JsonObject();
+                json.addProperty("wifi_name",wifiName);
+                json.addProperty("wifi_pass",wifiPass);
+                json.addProperty("device_name",deviceName);
 
                 if (mTcpClient != null)
                 {
@@ -158,15 +155,15 @@ public class ConfigFragment extends BaseFragment
         mProgressContainer.setVisibility(View.GONE);
     }
 
-    public class TCPTask extends AsyncTask<String, String, TcpClientThread>
+    public class TCPTask extends AsyncTask<String, String, TcpClientConfigThread>
     {
 
         @Override
-        protected TcpClientThread doInBackground(String... message)
+        protected TcpClientConfigThread doInBackground(String... message)
         {
 
             //we create a TCPClient object and
-            mTcpClient = new TcpClientThread(new TcpClientThread.OnMessageReceived()
+            mTcpClient = new TcpClientConfigThread(new TcpClientConfigThread.OnMessageReceived()
             {
                 @Override
                 public void onMessage(String message)
